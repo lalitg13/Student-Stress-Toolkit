@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Stress Toolkit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f0e8;
+      --surface: #fffdf7;
+      --card: #ffffff;
+      --accent: #c0693a;
+      --accent2: #4a7c6f;
+      --text: #1e1a14;
+      --muted: #7a7060;
+      --border: #e2d9c8;
+      --shadow: 0 4px 24px rgba(30,26,20,0.08);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.4rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: var(--text);
+    }
+    header span.leaf { font-size: 1.6rem; }
+
+    /* ── Layout ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── Mood Tracker ── */
+    .mood-grid {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .mood-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.85rem 1.1rem;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      flex: 1;
+      min-width: 80px;
+    }
+    .mood-btn span.emoji { font-size: 1.8rem; }
+    .mood-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+    .mood-btn.selected { border-color: var(--accent); background: #fdf3ec; color: var(--accent); font-weight: 500; }
+
+    /* ── Breathing ── */
+    .breath-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .breath-ring {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #d4ede8, #4a7c6f33);
+      border: 3px solid var(--accent2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--accent2);
+      transition: transform 4s ease-in-out;
+    }
+    .breath-ring.inhale { transform: scale(1.35); }
+    .breath-ring.exhale { transform: scale(1); }
+    .breath-controls { display: flex; gap: 0.75rem; }
+    .breath-btn {
+      padding: 0.55rem 1.3rem;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: 2px solid var(--accent2);
+      transition: all 0.2s;
+    }
+    .breath-btn.primary { background: var(--accent2); color: white; }
+    .breath-btn.primary:hover { background: #3a6459; }
+    .breath-btn.secondary { background: transparent; color: var(--accent2); }
+    .breath-btn.secondary:hover { background: #e8f3f1; }
+
+    /* ── Journal ── */
+    .journal-prompt {
+      background: #fdf6ee;
+      border-left: 4px solid var(--accent);
+      padding: 0.9rem 1.1rem;
+      border-radius: 0 10px 10px 0;
+      font-style: italic;
+      color: var(--text);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      resize: vertical;
+      background: var(--surface);
+      transition: border-color 0.2s;
+      line-height: 1.6;
+    }
+    textarea:focus { outline: none; border-color: var(--accent); }
+    .journal-actions { display: flex; gap: 0.75rem; margin-top: 0.85rem; align-items: center; }
+    .new-prompt-btn {
+      padding: 0.55rem 1.2rem;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: white;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .new-prompt-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .char-count { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+
+    /* ── Coping Cards ── */
+    .coping-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .coping-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .coping-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(30,26,20,0.1); }
+    .coping-card .icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .coping-card h4 { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.35rem; }
+    .coping-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+    /* ── Animations ── */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .card { animation: fadeIn 0.5s ease both; }
+    .card:nth-child(2) { animation-delay: 0.08s; }
+    .card:nth-child(3) { animation-delay: 0.16s; }
+    .card:nth-child(4) { animation-delay: 0.24s; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="leaf">🌿</span>
+  <h1>Student Stress Toolkit</h1>
+</header>
+
+<main>
+
+  <!-- Mood Tracker -->
+  <section>
+    <p class="section-title">How are you feeling right now?</p>
+    <div class="card">
+      <div class="mood-grid">
+        <button class="mood-btn" data-mood="overwhelmed" onclick="selectMood(this)">
+          <span class="emoji">😩</span> Overwhelmed
+        </button>
+        <button class="mood-btn" data-mood="anxious" onclick="selectMood(this)">
+          <span class="emoji">😰</span> Anxious
+        </button>
+        <button class="mood-btn" data-mood="tired" onclick="selectMood(this)">
+          <span class="emoji">😴</span> Tired
+        </button>
+        <button class="mood-btn" data-mood="okay" onclick="selectMood(this)">
+          <span class="emoji">😐</span> Okay
+        </button>
+        <button class="mood-btn" data-mood="good" onclick="selectMood(this)">
+          <span class="emoji">😊</span> Good
+        </button>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- Breathing Exercise -->
+  <section>
+    <p class="section-title">Breathing exercise</p>
+    <div class="card">
+      <div class="breath-center">
+        <div class="breath-ring" id="breathRing">Tap start</div>
+        <div class="breath-controls">
+          <button class="breath-btn primary" id="breathStartBtn" onclick="toggleBreath()">Start</button>
+          <button class="breath-btn secondary" onclick="resetBreath()">Reset</button>
+        </div>
+        <p style="font-size:0.82rem; color:var(--muted); text-align:center;">4-count inhale · 4-count hold · 6-count exhale</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journal Prompt -->
+  <section>
+    <p class="section-title">Quick journal</p>
+    <div class="card">
+      <div class="journal-prompt" id="journalPrompt">Loading a prompt for you...</div>
+      <textarea id="journalText" placeholder="Write freely — this stays on your device." oninput="updateCharCount()"></textarea>
+      <div class="journal-actions">
+        <button class="new-prompt-btn" onclick="newPrompt()">🔀 New prompt</button>
+        <span class="char-count" id="charCount">0 characters</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coping Tips -->
+  <section>
+    <p class="section-title">Quick coping strategies</p>
+    <div class="card">
+      <div class="coping-grid">
+        <div class="coping-card">
+          <div class="icon">🧊</div>
+          <h4>5-4-3-2-1 Grounding</h4>
+          <p>Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, 1 you taste.</p>
+        </div>
+        <div class="coping-card">
+          <div class="icon">🚶</div>
+          <h4>Movement Break</h4>
+          <p>Stand up and take a 5-minute walk, even just around your room. Movement clears your head.</p>
+        </div>
+        <div class="coping-card">
+          <div class="icon">📵</div>
+          <h4>Phone-Free 10 Min</h4>
+          <p>Put your phone face-down for 10 minutes and focus on just one task without notifications.</p>
+        </div>
+        <div class="coping-card">
+          <div class="icon">💧</div>
+          <h4>Drink Water</h4>
+          <p>Dehydration worsens anxiety and brain fog. Drink a full glass of water right now.</p>
+        </div>
+        <div class="coping-card">
+          <div class="icon">✍️</div>
+          <h4>Brain Dump</h4>
+          <p>Write every stressful thought on paper for 2 minutes. Getting it out of your head helps.</p>
+        </div>
+        <div class="coping-card">
+          <div class="icon">🌤️</div>
+          <h4>One Small Win</h4>
+          <p>Pick the smallest possible task you can complete right now. Done beats perfect.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // ── Mood ──
+  function selectMood(btn) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  // ── Breathing ──
+  let breathInterval = null;
+  let breathRunning = false;
+  const phases = [
+    { label: "Inhale...", cls: "inhale", duration: 4000 },
+    { label: "Hold...",   cls: "inhale", duration: 4000 },
+    { label: "Exhale...", cls: "exhale", duration: 6000 },
+  ];
+  let phaseIndex = 0;
+
+  function runBreathPhase() {
+    const ring = document.getElementById('breathRing');
+    const phase = phases[phaseIndex];
+    ring.textContent = phase.label;
+    ring.className = 'breath-ring ' + phase.cls;
+    phaseIndex = (phaseIndex + 1) % phases.length;
+    const next = phases[phaseIndex].duration;
+    breathInterval = setTimeout(runBreathPhase, next);
+  }
+
+  function toggleBreath() {
+    const btn = document.getElementById('breathStartBtn');
+    if (!breathRunning) {
+      breathRunning = true;
+      btn.textContent = 'Pause';
+      phaseIndex = 0;
+      runBreathPhase();
+    } else {
+      breathRunning = false;
+      btn.textContent = 'Resume';
+      clearTimeout(breathInterval);
+    }
+  }
+
+  function resetBreath() {
+    clearTimeout(breathInterval);
+    breathRunning = false;
+    phaseIndex = 0;
+    const ring = document.getElementById('breathRing');
+    ring.textContent = 'Tap start';
+    ring.className = 'breath-ring';
+    document.getElementById('breathStartBtn').textContent = 'Start';
+  }
+
+  // ── Journal ──
+  const prompts = [
+    "What's one thing that's been weighing on you lately? Write it out without judging yourself.",
+    "What would you tell a friend who is going through exactly what you're going through?",
+    "What is one small thing you are proud of this week, no matter how tiny?",
+    "What does your ideal tomorrow look like? Describe it in detail.",
+    "What is something you need to let go of right now?",
+    "List three things you are grateful for — be as specific as possible.",
+    "What would make today feel like a success, even just a little bit?",
+    "Describe a moment recently when you felt calm or at ease. What made it that way?",
+  ];
+  let promptIndex = Math.floor(Math.random() * prompts.length);
+
+  function showPrompt() {
+    document.getElementById('journalPrompt').textContent = prompts[promptIndex];
+  }
+
+  function newPrompt() {
+    promptIndex = (promptIndex + 1) % prompts.length;
+    showPrompt();
+  }
+
+  function updateCharCount() {
+    const len = document.getElementById('journalText').value.length;
+    document.getElementById('charCount').textContent = `${len} character${len !== 1 ? 's' : ''}`;
+  }
+
+  showPrompt();
+</script>
+</body>
+</html>
